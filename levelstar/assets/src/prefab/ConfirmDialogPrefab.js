@@ -14,9 +14,14 @@ cc.Class({
         this.titleLabel.string = title;
         this.contentLabel.string = content;
         this.btn1Label.string = btn1Str;
-        this.btn2Label.string = btn2Str;
         this.btn1Cb = btn1Cb;
-        this.btn2Cb = btn2Cb;
+        if(!btn2Str) {
+            this.btn1Node.x = 0;
+            this.btn2Node.active = false;
+        }else{
+            this.btn2Label.string = btn2Str;
+            this.btn2Cb = btn2Cb;
+        }
     },
     btn1Click:function() {
         this.btn1Cb();

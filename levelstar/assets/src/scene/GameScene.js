@@ -170,11 +170,14 @@ cc.Class({
                 "您的得分:" + this.totalScore,
                 "回主界面",function(){
                     cc.director.loadScene("MainScene");
-                },
-                "重新开始",function(){
-                    self.starGame();
                 });
         }
+            Comm.confirm(
+                "不能再消除了",
+                "您的得分:" + this.totalScore,
+                "回主界面",function(){
+                    cc.director.loadScene("MainScene");
+                });
     },
     // 清除相连数组里的星星
     clearConnectStar: function () {
