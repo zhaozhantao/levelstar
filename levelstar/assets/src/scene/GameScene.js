@@ -35,6 +35,16 @@ cc.Class({
     },
     // 生成网格
     initGrid: function () {
+        // 清空原来的
+        if (this.gridStarUi) {
+            for (var x = 0; x < Comm.gridSize; x++) {
+                for (var y = 0; y < Comm.gridSize; y++) {
+                    if (this.gridStarUi[x][y]) {
+                        this.gridStarUi[x][y].destroy();
+                    }
+                }
+            }
+        }
         // 网格数据
         var gridData = [];
         // 网格星星ui
@@ -58,7 +68,6 @@ cc.Class({
     },
     // 点击了一个星星，xy为数据坐标
     touchStar: function (x,y) {
-        console.log(x,y);
         if (this.stVar.selected) {
             if (this.connectContain(x,y)) {
                 // 如果点击了已被选中的星星
@@ -71,7 +80,6 @@ cc.Class({
                 this.touchStar(x,y);
             }
         } else {
-            console.log("当前没在选中状态");
             // 相连的星星
             this.stVar.connectStars = [[x, y]];
             this.checkStar(x, y);
@@ -128,6 +136,7 @@ cc.Class({
     },
     // 做一次消除操作
     cleanOnce: function () {
+        var self = this;
         // 计算得分
         this.scorePreLabel.fontSize = 64;
         this.scorePreLabel.node.runAction(cc.sequence(
@@ -147,6 +156,15 @@ cc.Class({
         // 检测本关是否结束
         if (this.checkOver()){
             console.log("不能再消除了");
+            Comm.confirm(
+                "不能再消除了",
+                "您的得分:" + this.totalScore,
+                "回主界面",function(){
+                    cc.director.loadScene("MainScene");
+                },
+                "重新开始",function(){
+                    self.starGame();
+                });
         }
     },
     // 清除相连数组里的星星
@@ -194,7 +212,6 @@ cc.Class({
                 // 执行左靠
                 for (var y = 0; y < Comm.gridSize; y++) {
                     if (this.gridData[x][y] > 0) {
-                        console.log(x,y,fallLeftDistance);
                         this.gridData[x - fallLeftDistance][y] = this.gridData[x][y];
                         this.gridData[x][y] = 0;
                         this.gridStarUi[x][y].getComponent(StarPrefab).goTo(x - fallLeftDistance, y, 0.1);
