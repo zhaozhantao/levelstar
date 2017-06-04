@@ -172,12 +172,6 @@ cc.Class({
                     cc.director.loadScene("MainScene");
                 });
         }
-            Comm.confirm(
-                "不能再消除了",
-                "您的得分:" + this.totalScore,
-                "回主界面",function(){
-                    cc.director.loadScene("MainScene");
-                });
     },
     // 清除相连数组里的星星
     clearConnectStar: function () {
