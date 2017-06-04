@@ -80,6 +80,7 @@ cc.Class({
                 this.touchStar(x,y);
             }
         } else {
+            if (this.gridData[x][y] == 0) {return;}
             // 相连的星星
             this.stVar.connectStars = [[x, y]];
             this.checkStar(x, y);
@@ -156,6 +157,14 @@ cc.Class({
         // 检测本关是否结束
         if (this.checkOver()){
             console.log("不能再消除了");
+            var lastScore = Comm.levelScores[Comm.currentLevel.toString()]
+            if (!lastScore || this.totalScore > lastScore) {
+                console.log("破记录了");
+                Comm.setLevelScore(Comm.currentLevel, this.totalScore);
+                // Comm.levelScores[Comm.currentLevel.toString()] = this.totalScore;
+                Comm.saveLevelScores();
+                Comm.calcScoreLogic();
+            }
             Comm.confirm(
                 "不能再消除了",
                 "您的得分:" + this.totalScore,
