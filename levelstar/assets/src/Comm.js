@@ -11,7 +11,7 @@ module.exports={
     },
     // 计算剩余星星所能得的分
     calcLastScore: function(count){
-        return math.max(0, 2000 - count*count*20)
+        return Math.max(0, 2000 - count*count*20)
     },
     // 显示一个tip
     tip: function(tipStr){

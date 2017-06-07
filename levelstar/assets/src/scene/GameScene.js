@@ -157,6 +157,12 @@ cc.Class({
         // 检测本关是否结束
         if (this.checkOver()){
             console.log("不能再消除了");
+            this.totalScore += Comm.calcLastScore(this.checkCount());
+            this.scoreLabel.string = this.totalScore;
+            console.log("计算剩余星星分");
+            console.log("最终得分", this.totalScore);
+
+            // 历史最高分
             var lastScore = Comm.levelScores[Comm.currentLevel.toString()]
             if (!lastScore || this.totalScore > lastScore) {
                 console.log("破记录了");
@@ -252,5 +258,18 @@ cc.Class({
             }
         }
         return true
+    },
+    // 检测剩余多少个星星
+    checkCount: function() {
+        var count = 0;
+        for (var x=0; x < Comm.gridSize; x++){
+            for (var y=0; y < Comm.gridSize; y++){
+                var starType = this.gridData[x][y];
+                if (starType > 0){
+                    count ++;
+                }
+            }
+        }
+        return count;
     },
 });
