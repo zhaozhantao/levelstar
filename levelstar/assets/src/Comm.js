@@ -61,10 +61,10 @@ module.exports={
     calcScoreLogic:function() {
         // 总分
         this.totalScore = 0;
-        // 最小未解锁关卡
-        this.minLockLevel = 10;
         // 最低分关卡
         this.minScoreLevel = 0;
+        // 倒数第二分关卡
+        this.min2ScoreLevel = 0;
 
         // 总分
         for(var i in this.levelScores) {
@@ -80,14 +80,20 @@ module.exports={
         }
         this.maxLevel = maxLevel;
 
-        // 最低分关卡
+        // 最低分关卡的得分
         var minScore = Number.POSITIVE_INFINITY;
+        // 倒数第二分关卡的得分
+        var min2Score = Number.POSITIVE_INFINITY;
         for(var i = 1; i <= this.maxLevel; i++){
             var score = this.levelScores[i.toString()];
             if (!score){score=0;}
             if (score < minScore || (score == minScore && this.minScoreLevel > i)) {
                 minScore = score;
+                this.min2ScoreLevel = this.minScoreLevel;
                 this.minScoreLevel = i;
+            } else if (score < min2Score || (score == min2Score && this.min2ScoreLevel > i)) {
+                min2Score = score;
+                this.min2ScoreLevel = i;
             }
         }
     },

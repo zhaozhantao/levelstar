@@ -2,7 +2,7 @@
   "appKey": "",
   "appSecret": "",
   "excludeScenes": [],
-  "includeAnySDK": false,
+  "includeAnySDK": true,
   "includeSdk": [
     "anysdk"
   ],

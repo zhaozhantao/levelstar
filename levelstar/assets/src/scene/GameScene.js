@@ -1,4 +1,5 @@
 var StarPrefab = require("../prefab/StarPrefab.js");
+var TargetPrefab = require("../prefab/TargetPrefab.js");
 var Comm = require("../Comm.js");
 cc.Class({
     extends: cc.Component,
@@ -8,6 +9,8 @@ cc.Class({
         starGrid:cc.Node,
         scoreLabel:cc.Label,
         scorePreLabel:cc.Label,
+        targetPrefab:cc.Node,
+        targetLabel:cc.Label,
     },
 
     // use this for initialization
@@ -23,6 +26,8 @@ cc.Class({
     starGame: function () {
         this.initStatus();
         this.initGrid();
+        this.calcScore();
+        this.targetPrefab.getComponent(TargetPrefab).showDialog();
     },
     // 初始化状态变量
     initStatus: function () {
@@ -65,6 +70,29 @@ cc.Class({
         }
         this.gridData = gridData;
         this.gridStarUi = gridStarUi;
+    },
+    // 计算数数逻辑
+    calcScore: function () {
+        // 超过倒数第二关的目标分
+        var target1Score = 0;
+        if (Comm.min2ScoreLevel && Comm.min2ScoreLevel != 0){
+            target1Score = Comm.levelScores[Comm.min2ScoreLevel];
+            if (target1Score) {
+                target1Score ++; // 要超过倒数第二，所以得加一分，要不然不能算超过
+            } else {
+                target1Score = 0;
+            }
+        }
+        var target2Score = 0;
+        if (Comm.maxLevel){
+            // 目标分=解锁分-(总分-当前关分)
+            target2Score = Comm.calcTargetScore(Comm.maxLevel)-(Comm.totalScore-Comm.levelScores[Comm.currentLevel]);
+        }
+        if (target1Score > target2Score) {
+            this.targetLabel.string = "小目标:" + target2Score;
+        } else {
+            this.targetLabel.string = "小目标:" + target1Score;
+        }
     },
     // 点击了一个星星，xy为数据坐标
     touchStar: function (x,y) {
