@@ -226,7 +226,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 400,
+      "width": 55.62,
       "height": 100
     },
     "_rotationX": 0,
@@ -261,7 +261,7 @@
     "_N$file": null,
     "_isSystemFontUsed": true,
     "_spacingX": 0,
-    "_N$string": "消灭星星",
+    "_N$string": "0",
     "_N$horizontalAlign": 1,
     "_N$verticalAlign": 1,
     "_N$fontFamily": "Arial",
@@ -763,6 +763,9 @@
     },
     "totalScoreLabel": {
       "__id__": 6
+    },
+    "scrollView": {
+      "__id__": 18
     }
   }
 ]

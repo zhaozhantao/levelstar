@@ -9,6 +9,7 @@ cc.Class({
         levelPrefab:cc.Prefab,
         levelCurPrefab:cc.Prefab,
         totalScoreLabel:cc.Label,
+        scrollView:cc.ScrollView,
     },
 
     // use this for initialization
@@ -50,6 +51,7 @@ cc.Class({
             });
             this.levelLayout.addChild(cell);
         }
+
         // 未解锁
         var cell = cc.instantiate(this.levelPrefab);
         cell.getComponent(LevelPrefab).setUnlockInfoForLevel(Comm.maxLevel + 1);
@@ -58,6 +60,12 @@ cc.Class({
         });
         this.levelLayout.addChild(cell);
 
+        this.scheduleOnce(function() {
+            var maxScrollOffset = this.scrollView.getMaxScrollOffset();
+            var percent = Math.min(1, Math.max(0,(Comm.minScoreLevel - 6) / (Comm.maxLevel+1 - 7)));
+            console.log("percent",percent);
+            this.scrollView.scrollToOffset(cc.p(0,maxScrollOffset.y*percent), 0.3);
+        }, 0);
     },
 
     // called every frame, uncomment this function to activate update callback
@@ -65,6 +73,5 @@ cc.Class({
 
     // },
     startButtonClick: function(){
-        cc.director.loadScene("GameScene");
     },
 });
