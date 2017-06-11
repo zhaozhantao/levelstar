@@ -66,6 +66,34 @@ cc.Class({
             console.log("percent",percent);
             this.scrollView.scrollToOffset(cc.p(0,maxScrollOffset.y*percent), 0.3);
         }, 0);
+        console.log("弄一下统计的东西");
+        console.log("typeof", typeof(anysdk));
+        if (typeof(anysdk) != "undefined") {
+            var agent = anysdk.agentManager;
+            console.log("agent",agent);
+            if (agent) {
+                var user_plugin = agent.getAnalyticsPlugin();
+                console.log("user_plugin",user_plugin);
+                if (user_plugin) {
+                    if (user_plugin.setAccount) {
+                        user_plugin.setAccount({
+                            Account_Id : "123456",
+                            Account_Name : "test",
+                            Account_Type : (anysdk.AccountType.ANONYMOUS).toString(),
+                            Account_Level : "0",
+                            Account_Age : "0",
+                            Account_Operate : (anysdk.AccountOperate.LOGIN).toString(),
+                            Account_Gender : (anysdk.AccountGender.UNKNOWN).toString(),
+                            Server_Id : "0"
+                        });
+                    }
+                    if (user_plugin.startSession) {
+                        user_plugin.startSession();
+                    }
+                    console.log("统计的东西弄完了")
+                }
+            }
+        }
     },
 
     // called every frame, uncomment this function to activate update callback
