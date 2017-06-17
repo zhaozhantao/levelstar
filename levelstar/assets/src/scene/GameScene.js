@@ -1,5 +1,4 @@
 var StarPrefab = require("../prefab/StarPrefab.js");
-var TargetPrefab = require("../prefab/TargetPrefab.js");
 var Comm = require("../Comm.js");
 cc.Class({
     extends: cc.Component,
@@ -9,7 +8,6 @@ cc.Class({
         starGrid:cc.Node,
         scoreLabel:cc.Label,
         scorePreLabel:cc.Label,
-        targetPrefab:cc.Node,
         targetLabel:cc.Label,
     },
 
@@ -21,13 +19,19 @@ cc.Class({
             var pos = self.starGrid.convertToNodeSpace(e.touch.getLocation());
             self.touchStar(parseInt(pos.x / (self.starGrid.width/10)),parseInt(pos.y / (self.starGrid.height/10)));
         });
+
+        // 适配屏幕
+        var size = cc.director.getWinSize();
+        this.scoreLabel.node.y = size.height/2 - (size.height-size.width)/2/2;
+        this.targetLabel.node.y = size.height/2 - 50;
     },
     // 开始游戏
     starGame: function () {
         this.initStatus();
         this.initGrid();
-        this.calcScore();
-        this.targetPrefab.getComponent(TargetPrefab).showDialog();
+        Comm.calcTargetStr()
+        this.targetButtonClick();
+        this.updateTargetLabel();
     },
     // 初始化状态变量
     initStatus: function () {
@@ -71,27 +75,22 @@ cc.Class({
         this.gridData = gridData;
         this.gridStarUi = gridStarUi;
     },
-    // 计算数数逻辑
-    calcScore: function () {
-        // 超过倒数第二关的目标分
-        var target1Score = 0;
-        if (Comm.min2ScoreLevel && Comm.min2ScoreLevel != 0){
-            target1Score = Comm.levelScores[Comm.min2ScoreLevel];
-            if (target1Score) {
-                target1Score ++; // 要超过倒数第二，所以得加一分，要不然不能算超过
+    // 更新目标分label
+    updateTargetLabel: function () {
+        if (Comm.targetStrTab.oneTarget) {
+            if (this.totalScore >= Comm.targetStrTab.oneTarget) {
+                this.targetLabel.string = "目标:" + Comm.targetStrTab.oneTarget + "分(已完成)";
             } else {
-                target1Score = 0;
+                this.targetLabel.string = "目标:" + Comm.targetStrTab.oneTarget + "分";
             }
-        }
-        var target2Score = 0;
-        if (Comm.maxLevel){
-            // 目标分=解锁分-(总分-当前关分)
-            target2Score = Comm.calcTargetScore(Comm.maxLevel)-(Comm.totalScore-Comm.levelScores[Comm.currentLevel]);
-        }
-        if (target1Score > target2Score) {
-            this.targetLabel.string = "小目标:" + target2Score;
-        } else {
-            this.targetLabel.string = "小目标:" + target1Score;
+        }else{
+            if (this.totalScore < Comm.targetStrTab.littleTarget) {
+                this.targetLabel.string = "小目标:" + Comm.targetStrTab.littleTarget + "分";
+            } else if(this.totalScore < Comm.targetStrTab.bigTarget){
+                this.targetLabel.string = "大目标:" + Comm.targetStrTab.bigTarget + "分";
+            } else {
+                this.targetLabel.string = "大目标:" + Comm.targetStrTab.bigTarget + "分(已完成)";
+            }
         }
     },
     // 点击了一个星星，xy为数据坐标
@@ -175,7 +174,7 @@ cc.Class({
             ));
         this.totalScore += parseInt(this.scorePreLabel.string);
         this.scoreLabel.string = this.totalScore;
-
+        this.updateTargetLabel();
         // 清除星星
         this.clearConnectStar();
         // 让星星下落
@@ -185,10 +184,27 @@ cc.Class({
         // 检测本关是否结束
         if (this.checkOver()){
             console.log("不能再消除了");
-            this.totalScore += Comm.calcLastScore(this.checkCount());
+            var lastCount = this.checkCount();
+            var lastCountScore = Comm.calcLastScore(lastCount);
+            this.totalScore += lastCountScore;
             this.scoreLabel.string = this.totalScore;
             console.log("计算剩余星星分");
             console.log("最终得分", this.totalScore);
+
+            // 目标完成情况
+            var dlgStr = "";
+            if (Comm.targetStrTab.oneTarget) {
+                var isOk = "已完成";
+                if (this.totalScore < Comm.targetStrTab.oneTarget) {isOk="未完成";}
+                dlgStr = "目标:" + Comm.targetStrTab.oneTarget + "分" + Comm.targetStrTab.oneTargetStr + isOk;
+            } else {
+                var isOk1 = "已完成";
+                if (this.totalScore < Comm.targetStrTab.littleTarget) {isOk1="未完成";}
+                var isOk2 = "已完成";
+                if (this.totalScore < Comm.targetStrTab.bigTarget) {isOk2="未完成";}
+                dlgStr = "小目标:" + Comm.targetStrTab.littleTarget + "分" + Comm.targetStrTab.littleTargetStr + isOk1 +"\n"
+                + "大目标:" + Comm.targetStrTab.bigTarget + "分" + Comm.targetStrTab.bigTargetStr + isOk2;
+            }
 
             // 历史最高分
             var lastScore = Comm.levelScores[Comm.currentLevel.toString()]
@@ -201,9 +217,14 @@ cc.Class({
             }
             Comm.confirm(
                 "不能再消除了",
-                "您的得分:" + this.totalScore,
-                "回主界面",function(){
-                    cc.director.loadScene("MainScene");
+                "您的得分:" + this.totalScore + "(其中剩余星星"+ lastCount + "附加分:" + lastCountScore + ")",
+                "确定",function(){
+                    Comm.confirm(
+                        "目标",
+                        dlgStr,
+                        "回主菜单",function(){
+                            cc.director.loadScene("MainScene");
+                        });
                 });
         }
     },
@@ -300,4 +321,21 @@ cc.Class({
         }
         return count;
     },
+    // 点击目标分
+    targetButtonClick:function () {
+        var dlgStr = "";
+        if (Comm.targetStrTab.oneTarget) {
+            dlgStr = "目标:" + Comm.targetStrTab.oneTarget + "分" + Comm.targetStrTab.oneTargetStr;
+        } else {
+            dlgStr = "小目标:" + Comm.targetStrTab.littleTarget + "分" + Comm.targetStrTab.littleTargetStr + "\n"
+            + "大目标:" + Comm.targetStrTab.bigTarget + "分" + Comm.targetStrTab.bigTargetStr;
+        }
+        console.log(dlgStr);
+        Comm.confirm(
+            "目标",
+            dlgStr,
+            "确定",
+            function(){},
+        );
+    }
 });

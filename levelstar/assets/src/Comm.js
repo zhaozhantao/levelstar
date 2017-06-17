@@ -117,6 +117,51 @@ module.exports={
         console.log("setLevelScore", level, score);
         this.levelScores[level.toString()] = score;
     },
+    // 计算目标分的字符串
+    calcTargetStr: function() {
+        this.targetStrTab = {};
+        // 超过倒数第二关的目标分
+        var target1Score = 0;
+        if (this.min2ScoreLevel && this.min2ScoreLevel != 0){
+            target1Score = this.levelScores[this.min2ScoreLevel];
+            if (target1Score) {
+                target1Score ++; // 要超过倒数第二，所以得加一分，要不然不能算超过
+            } else {
+                target1Score = 0;
+            }
+        }
+        var target2Score = 0;
+        if (this.maxLevel){
+            // 目标分=解锁分-(总分-当前关分)
+            var curScore = this.levelScores[this.currentLevel];
+            if (! curScore) {
+                curScore = 0;
+            }
+
+            target2Score = this.calcTargetScore(this.maxLevel)-(this.totalScore-curScore);
+        }
+        if (target1Score > target2Score) {
+            if (target2Score > 0){
+                this.targetStrTab.littleTarget = target2Score;
+                this.targetStrTab.littleTargetStr = "(解锁第" + (this.maxLevel+1) + "关)\n";
+                this.targetStrTab.bigTarget = target1Score;
+                this.targetStrTab.bigTargetStr = "(超过第" + this.min2ScoreLevel + "关)";
+            } else {
+                this.targetStrTab.oneTarget = target1Score;
+                this.targetStrTab.oneTargetStr = "(超过第" + this.min2ScoreLevel + "关)";
+            }
+        } else {
+            if (target1Score > 0){
+                this.targetStrTab.littleTarget = target1Score;
+                this.targetStrTab.littleTargetStr = "(超过第" + this.min2ScoreLevel + "关)";
+                this.targetStrTab.bigTarget = target2Score;
+                this.targetStrTab.bigTargetStr = "(解锁第" + (this.maxLevel+1) + "关)\n";
+            } else {
+                this.targetStrTab.oneTarget = target2Score;
+                this.targetStrTab.oneTargetStr = "(解锁第" + (this.maxLevel+1) + "关)\n";
+            }
+        }
+    },
 };
 
 
