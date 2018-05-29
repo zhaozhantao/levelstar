@@ -136,8 +136,8 @@
     "_color": {
       "__type__": "cc.Color",
       "r": 255,
-      "g": 224,
-      "b": 0,
+      "g": 255,
+      "b": 255,
       "a": 255
     },
     "_cascadeOpacityEnabled": true,
@@ -176,7 +176,7 @@
     },
     "_enabled": true,
     "_spriteFrame": {
-      "__uuid__": "a23235d1-15db-4b95-8439-a2e005bfff91"
+      "__uuid__": "826076b1-f00a-4808-a6d9-20ed0352ee82"
     },
     "_type": 0,
     "_sizeMode": 0,
@@ -226,7 +226,7 @@
     },
     "_contentSize": {
       "__type__": "cc.Size",
-      "width": 55.62,
+      "width": 56,
       "height": 100
     },
     "_rotationX": 0,
@@ -451,12 +451,6 @@
     },
     "duration": 0.1,
     "zoomScale": 1.2,
-    "pressedSprite": {
-      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
-    },
-    "hoverSprite": {
-      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
-    },
     "clickEvents": [
       {
         "__id__": 12
@@ -480,6 +474,18 @@
     },
     "_N$normalSprite": {
       "__uuid__": "28f2d2c9-b208-4a9f-a714-adecf56c0be9"
+    },
+    "_N$pressedSprite": {
+      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
+    },
+    "pressedSprite": {
+      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
+    },
+    "_N$hoverSprite": {
+      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
+    },
+    "hoverSprite": {
+      "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
     },
     "_N$disabledSprite": {
       "__uuid__": "06955a03-77f7-4b7b-af25-8e8e22ca5ca0"
