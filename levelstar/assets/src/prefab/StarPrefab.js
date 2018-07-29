@@ -22,7 +22,7 @@ cc.Class({
     // use this for initialization
     onLoad: function () {
         var self = this;
-        this.node.setScale(0.95);
+        this.node.setScale(1.1);
         // this.node.on(cc.Node.EventType.TOUCH_START, function(e){
         //     self.ctrl.touchStar(self.gridX, self.gridY);
         // });
@@ -41,7 +41,7 @@ cc.Class({
     setSelected:function(selected) {
         if (!selected) {
             this.node.stopAllActions();
-            this.node.setScale(0.95);
+            this.node.setScale(1.1);
         } else {
             this.node.runAction(
                 cc.repeatForever(cc.sequence(

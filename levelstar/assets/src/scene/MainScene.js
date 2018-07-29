@@ -14,6 +14,11 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
+
+		// cocosAnalytics.enableDebug(true);
+		// console.log("登录统计");
+  //   	cocosAnalytics.CAAccount.loginStart();
+		// cocosAnalytics.CAAccount.loginSuccess({'userID':'dddddddd'});
         // 读取分数表
         Comm.readLevelScores();
         Comm.calcScoreLogic();

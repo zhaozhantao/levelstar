@@ -13,6 +13,12 @@ cc.Class({
 
     // use this for initialization
     onLoad: function () {
+
+		// cocosAnalytics.enableDebug(true);
+		console.log("登录统计");
+    	// cocosAnalytics.CAAccount.loginStart();
+		// cocosAnalytics.CAAccount.loginSuccess({'userID':'dddddddd'});
+
         var self = this;
         this.starGame();
         this.starGrid.on(cc.Node.EventType.TOUCH_START, function(e){
